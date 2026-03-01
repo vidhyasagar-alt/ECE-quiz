@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECE Technical Quiz - Podhigai College of Engineering and Technology</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #00d4ff;
+    --secondary: #0a4a6e;
+    --accent: #ff6b00;
+    --dark: #020c18;
+    --dark2: #041525;
+    --dark3: #071e33;
+    --text: #c8e8f8;
+    --text-dim: #6a9ab8;
+    --green: #00ff88;
+    --red: #ff3355;
+    --grey: #445566;
+    --gold: #ffd700;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* CIRCUIT BOARD BACKGROUND */
+  .circuit-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .circuit-bg svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.07;
+  }
+
+  /* PAGES */
+  .page { display: none; position: relative; z-index: 1; min-height: 100vh; }
+  .page.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+  /* HEADER BLOCK */
+  .college-header {
+    text-align: center;
+    padding: 30px 20px 20px;
+    position: relative;
+  }
+
+  .college-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 15px;
+    border: 3px solid var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, #051a30, #020c18);
+    box-shadow: 0 0 30px rgba(0,212,255,0.4);
+    animation: pulse-glow 2s infinite;
+  }
+
+  .college-logo svg { width: 50px; height: 50px; }
+
+  @keyframes pulse-glow {
+    0%,100% { box-shadow: 0 0 30px rgba(0,212,255,0.4); }
+    50% { box-shadow: 0 0 60px rgba(0,212,255,0.8); }
+  }
+
+  .college-name {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(14px, 2.5vw, 22px);
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(255,215,0,0.5);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .dept-name {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(18px, 4vw, 36px);
+    font-weight: 900;
+    color: var(--primary);
+    letter-spacing: 3px;
+    text-shadow: 0 0 30px rgba(0,212,255,0.7);
+    margin-bottom: 8px;
+  }
+
+  .creator-tag {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .divider {
+    width: 80%;
+    max-width: 600px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), var(--accent), var(--primary), transparent);
+    margin: 15px auto;
+    animation: flow 3s linear infinite;
+    background-size: 200%;
+  }
+
+  @keyframes flow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+
+  /* FORM CARD */
+  .form-card {
+    background: linear-gradient(135deg, rgba(4,21,37,0.95), rgba(7,30,51,0.95));
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 16px;
+    padding: 35px 40px;
+    width: 90%;
+    max-width: 560px;
+    box-shadow: 0 0 60px rgba(0,212,255,0.1), inset 0 0 60px rgba(0,0,0,0.3);
+    position: relative;
+    margin-bottom: 30px;
+  }
+
+  .form-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 20px; right: 20px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  }
+
+  .form-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 16px;
+    color: var(--primary);
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+    text-align: center;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-group.full { grid-column: 1 / -1; }
+
+  .form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .form-group input {
+    background: rgba(0,212,255,0.05);
+    border: 1px solid rgba(0,212,255,0.25);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s;
+    outline: none;
+  }
+
+  .form-group input:focus {
+    border-color: var(--primary);
+    background: rgba(0,212,255,0.1);
+    box-shadow: 0 0 20px rgba(0,212,255,0.2);
+  }
+
+  .form-group input::placeholder { color: var(--text-dim); font-size: 13px; }
+
+  .form-group input.error { border-color: var(--red); box-shadow: 0 0 15px rgba(255,51,85,0.3); }
+
+  .error-msg {
+    color: var(--red);
+    font-size: 12px;
+    display: none;
+    margin-top: 5px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background: linear-gradient(135deg, var(--secondary), #0d6eab);
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    color: var(--primary);
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .submit-btn:hover::before { left: 100%; }
+
+  .submit-btn:hover {
+    background: linear-gradient(135deg, #0d6eab, var(--primary));
+    color: var(--dark);
+    box-shadow: 0 0 30px rgba(0,212,255,0.5);
+    transform: translateY(-2px);
+  }
+
+  /* PAGE 2 - QUIZ WELCOME */
+  .welcome-card {
+    background: linear-gradient(135deg, rgba(4,21,37,0.95), rgba(7,30,51,0.95));
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 16px;
+    padding: 40px;
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(0,212,255,0.1);
+    margin-bottom: 30px;
+  }
+
+  .welcome-name {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(20px, 4vw, 28px);
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+
+  .welcome-info {
+    color: var(--text-dim);
+    font-size: 15px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+
+  .quiz-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  .info-box {
+    background: rgba(0,212,255,0.05);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 10px;
+    padding: 15px 10px;
+    text-align: center;
+  }
+
+  .info-box .value {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .info-box .label {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 5px;
+  }
+
+  .start-btn {
+    padding: 18px 50px;
+    background: linear-gradient(135deg, #ff6b00, #ff9500);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Orbitron', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    box-shadow: 0 0 30px rgba(255,107,0,0.4);
+  }
+
+  .start-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 50px rgba(255,107,0,0.7);
+  }
+
+  /* PAGE 3 - QUIZ */
+  #page-quiz {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 280px;
+    min-width: 280px;
+    height: 100vh;
+    background: linear-gradient(180deg, #020c18, #041525);
+    border-right: 1px solid rgba(0,212,255,0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    transition: transform 0.3s;
+  }
+
+  .sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(0,212,255,0.2);
+  }
+
+  .sidebar-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    color: var(--primary);
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+  }
+
+  .timer-display {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 36px;
+    color: var(--green);
+    text-align: center;
+    text-shadow: 0 0 20px rgba(0,255,136,0.5);
+    transition: color 0.3s;
+  }
+
+  .timer-display.warning { color: var(--accent); text-shadow: 0 0 20px rgba(255,107,0,0.5); }
+  .timer-display.danger { color: var(--red); text-shadow: 0 0 20px rgba(255,51,85,0.5); animation: blink 0.5s infinite; }
+
+  @keyframes blink { 50% { opacity: 0.5; } }
+
+  .legend {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+  }
+
+  .legend-dot.answered { background: var(--green); }
+  .legend-dot.not-answered { background: var(--red); }
+  .legend-dot.not-attended { background: var(--grey); }
+
+  .q-grid {
+    padding: 15px;
+    overflow-y: auto;
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    align-content: start;
+  }
+
+  .q-btn {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 6px;
+    border: none;
+    background: var(--grey);
+    color: white;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .q-btn:hover { transform: scale(1.1); }
+  .q-btn.answered { background: var(--green); color: var(--dark); }
+  .q-btn.not-answered { background: var(--red); }
+  .q-btn.current { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .sidebar-footer {
+    padding: 15px;
+    border-top: 1px solid rgba(0,212,255,0.2);
+  }
+
+  .submit-quiz-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent), #ff9500);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .submit-quiz-btn:hover { box-shadow: 0 0 20px rgba(255,107,0,0.5); transform: translateY(-2px); }
+
+  /* MAIN QUIZ AREA */
+  .quiz-main {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .quiz-topbar {
+    padding: 15px 30px;
+    background: rgba(4,21,37,0.9);
+    border-bottom: 1px solid rgba(0,212,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .quiz-topbar .dept {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    color: var(--primary);
+  }
+
+  .progress-bar {
+    flex: 1;
+    max-width: 300px;
+    height: 6px;
+    background: rgba(0,212,255,0.1);
+    border-radius: 3px;
+    margin: 0 20px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+
+  .q-counter {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  .question-area {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .q-number {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  .q-subject {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+  }
+
+  .q-text {
+    font-size: clamp(16px, 2.5vw, 20px);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  .option-btn {
+    padding: 18px 20px;
+    background: rgba(0,212,255,0.04);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .option-btn .opt-label {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,212,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: var(--primary);
+  }
+
+  .option-btn:hover {
+    border-color: var(--primary);
+    background: rgba(0,212,255,0.1);
+    transform: translateX(5px);
+  }
+
+  .option-btn.selected {
+    border-color: var(--primary);
+    background: rgba(0,212,255,0.15);
+    box-shadow: 0 0 20px rgba(0,212,255,0.2);
+  }
+
+  .option-btn.selected .opt-label {
+    background: var(--primary);
+    color: var(--dark);
+  }
+
+  .nav-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: auto;
+  }
+
+  .nav-btn {
+    padding: 14px 30px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,212,255,0.3);
+    background: rgba(0,212,255,0.05);
+    color: var(--primary);
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-btn:hover {
+    background: rgba(0,212,255,0.15);
+    border-color: var(--primary);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  /* MOBILE SIDEBAR TOGGLE */
+  .sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 100;
+    background: var(--primary);
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    color: var(--dark);
+    font-size: 20px;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.show { display: flex; }
+
+  .modal-box {
+    background: linear-gradient(135deg, #041525, #071e33);
+    border: 1px solid rgba(0,212,255,0.4);
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(0,212,255,0.2);
+  }
+
+  .modal-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 18px;
+    color: var(--primary);
+    margin-bottom: 15px;
+  }
+
+  .modal-text {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+  }
+
+  .modal-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 25px;
+  }
+
+  .modal-stat {
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .modal-stat.green { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); }
+  .modal-stat.red { background: rgba(255,51,85,0.1); border: 1px solid rgba(255,51,85,0.3); }
+  .modal-stat.grey { background: rgba(68,85,102,0.2); border: 1px solid rgba(68,85,102,0.5); }
+
+  .modal-stat .num { font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 700; }
+  .modal-stat.green .num { color: var(--green); }
+  .modal-stat.red .num { color: var(--red); }
+  .modal-stat.grey .num { color: var(--grey); }
+  .modal-stat .lbl { font-size: 11px; color: var(--text-dim); margin-top: 5px; }
+
+  .modal-buttons { display: flex; gap: 15px; justify-content: center; }
+
+  .modal-btn {
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .modal-btn.confirm {
+    background: linear-gradient(135deg, var(--accent), #ff9500);
+    border: none;
+    color: white;
+  }
+
+  .modal-btn.cancel {
+    background: transparent;
+    border: 1px solid rgba(0,212,255,0.3);
+    color: var(--primary);
+  }
+
+  .modal-btn:hover { transform: translateY(-2px); }
+
+  /* PAGE 4 - THANK YOU */
+  .thankyou-card {
+    background: linear-gradient(135deg, rgba(4,21,37,0.95), rgba(7,30,51,0.95));
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 16px;
+    padding: 60px 50px;
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 0 80px rgba(0,212,255,0.15);
+    margin-bottom: 30px;
+    animation: fadeIn 1s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .thankyou-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .thankyou-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(20px, 4vw, 30px);
+    color: var(--primary);
+    margin-bottom: 15px;
+    line-height: 1.3;
+  }
+
+  .thankyou-subtitle {
+    color: var(--text-dim);
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+  }
+
+  .result-note {
+    background: rgba(255,107,0,0.1);
+    border: 1px solid rgba(255,107,0,0.3);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 25px;
+  }
+
+  .result-note p {
+    color: var(--accent);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .thankyou-creator {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-top: 20px;
+  }
+
+  .thankyou-creator span { color: var(--primary); font-weight: 600; }
+
+  /* SCANNING LINE */
+  @keyframes scan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+  }
+
+  .scan-line {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    opacity: 0.3;
+    animation: scan 8s linear infinite;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .options-grid { grid-template-columns: 1fr; }
+    .quiz-info-grid { grid-template-columns: 1fr; }
+    .sidebar { position: fixed; left: 0; top: 0; z-index: 50; transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-toggle { display: block; }
+    .question-area { padding: 20px; }
+    .quiz-topbar { padding: 10px 15px; padding-left: 60px; }
+    .form-card, .welcome-card { padding: 25px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scan-line"></div>
+
+<!-- CIRCUIT BACKGROUND -->
+<div class="circuit-bg">
+  <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <pattern id="circuit" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+        <line x1="0" y1="50" x2="30" y2="50" stroke="#00d4ff" stroke-width="1"/>
+        <line x1="30" y1="50" x2="30" y2="20" stroke="#00d4ff" stroke-width="1"/>
+        <line x1="30" y1="20" x2="70" y2="20" stroke="#00d4ff" stroke-width="1"/>
+        <line x1="70" y1="20" x2="70" y2="80" stroke="#00d4ff" stroke-width="1"/>
+        <line x1="70" y1="80" x2="100" y2="80" stroke="#00d4ff" stroke-width="1"/>
+        <circle cx="30" cy="50" r="3" fill="#00d4ff"/>
+        <circle cx="70" cy="20" r="3" fill="#00d4ff"/>
+        <circle cx="70" cy="80" r="3" fill="#00d4ff"/>
+        <rect x="40" y="15" width="15" height="10" fill="none" stroke="#00d4ff" stroke-width="1"/>
+        <rect x="55" y="70" width="10" height="15" fill="none" stroke="#00d4ff" stroke-width="1"/>
+      </pattern>
+    </defs>
+    <rect width="1200" height="800" fill="url(#circuit)"/>
+    <!-- IC chips -->
+    <rect x="100" y="100" width="80" height="50" rx="4" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+    <rect x="400" y="300" width="100" height="60" rx="4" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+    <rect x="800" y="150" width="80" height="50" rx="4" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+    <rect x="200" y="500" width="120" height="70" rx="4" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+    <rect x="900" y="400" width="90" height="55" rx="4" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+    <!-- Pins -->
+    <line x1="100" y1="115" x2="80" y2="115" stroke="#00d4ff" stroke-width="1"/>
+    <line x1="100" y1="130" x2="80" y2="130" stroke="#00d4ff" stroke-width="1"/>
+    <line x1="100" y1="145" x2="80" y2="145" stroke="#00d4ff" stroke-width="1"/>
+    <line x1="180" y1="115" x2="200" y2="115" stroke="#00d4ff" stroke-width="1"/>
+    <line x1="180" y1="130" x2="200" y2="130" stroke="#00d4ff" stroke-width="1"/>
+  </svg>
+</div>
+
+<!-- PAGE 1: REGISTRATION -->
+<div class="page active" id="page-register">
+  <div class="college-header">
+    <div class="college-logo">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30" cy="30" r="28" stroke="#00d4ff" stroke-width="2"/>
+        <path d="M15 35 L30 15 L45 35" stroke="#00d4ff" stroke-width="2" fill="none"/>
+        <rect x="20" y="35" width="20" height="12" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+        <line x1="10" y1="48" x2="50" y2="48" stroke="#00d4ff" stroke-width="1.5"/>
+        <circle cx="30" cy="27" r="3" fill="#00d4ff"/>
+      </svg>
+    </div>
+    <div class="college-name">PODHIGAI COLLEGE OF ENGINEERING AND TECHNOLOGY</div>
+    <div class="divider"></div>
+    <div class="dept-name">Welcome to the Department of ECE</div>
+    <div class="creator-tag">Created by VIDHYA SAGAR — Department of ECE</div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-title">⚡ PARTICIPANT REGISTRATION</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" id="reg-name" placeholder="Enter your full name">
+      </div>
+      <div class="form-group">
+        <label>College Name *</label>
+        <input type="text" id="reg-college" placeholder="College name">
+      </div>
+      <div class="form-group">
+        <label>Year of Study *</label>
+        <input type="text" id="reg-year" placeholder="e.g. 2nd Year">
+      </div>
+      <div class="form-group">
+        <label>Department *</label>
+        <input type="text" id="reg-dept" placeholder="e.g. ECE">
+      </div>
+      <div class="form-group full">
+        <label>Email Address *</label>
+        <input type="email" id="reg-email" placeholder="your@email.com">
+      </div>
+      <div class="form-group full">
+        <label>Phone Number *</label>
+        <input type="tel" id="reg-phone" placeholder="10-digit mobile number">
+      </div>
+    </div>
+    <div class="error-msg" id="reg-error" style="display:block;"></div>
+    <button class="submit-btn" onclick="submitRegistration()">▶ SUBMIT & PROCEED</button>
+  </div>
+</div>
+
+<!-- PAGE 2: QUIZ WELCOME -->
+<div class="page" id="page-welcome">
+  <div class="college-header">
+    <div class="college-name">PODHIGAI COLLEGE OF ENGINEERING AND TECHNOLOGY</div>
+    <div class="divider"></div>
+    <div class="dept-name">Welcome to the Department of ECE</div>
+    <div class="creator-tag">Created by VIDHYA SAGAR — Department of ECE</div>
+  </div>
+
+  <div class="welcome-card">
+    <div class="welcome-name" id="welcome-name">Welcome!</div>
+    <div class="welcome-info" id="welcome-info">You are registered for the ECE Technical Quiz.</div>
+
+    <div class="quiz-info-grid">
+      <div class="info-box">
+        <div class="value">50</div>
+        <div class="label">Questions</div>
+      </div>
+      <div class="info-box">
+        <div class="value">25:00</div>
+        <div class="label">Minutes</div>
+      </div>
+      <div class="info-box">
+        <div class="value">MCQ</div>
+        <div class="label">Type</div>
+      </div>
+    </div>
+
+    <div style="color: var(--text-dim); font-size:13px; margin-bottom:25px; line-height:1.8; text-align:left; background: rgba(0,212,255,0.05); padding:15px; border-radius:8px; border: 1px solid rgba(0,212,255,0.15);">
+      📌 <strong style="color:var(--primary)">Instructions:</strong><br>
+      • 50 MCQ questions from ECE Anna University Syllabus (Reg. 2021)<br>
+      • Timer starts when you click "Start Quiz"<br>
+      • Use the panel on left to navigate & track answered questions<br>
+      • <span style="color:var(--green)">■ Green</span> = Answered &nbsp; <span style="color:var(--red)">■ Red</span> = Visited but not answered &nbsp; <span style="color:var(--grey)">■ Grey</span> = Not attended
+    </div>
+
+    <button class="start-btn" onclick="startQuiz()">⚡ START QUIZ</button>
+  </div>
+</div>
+
+<!-- PAGE 3: QUIZ -->
+<div class="page" id="page-quiz">
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+  <div class="sidebar" id="quiz-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">EXAM TIMER</div>
+      <div class="timer-display" id="timer">25:00</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot answered"></div>Answered</div>
+        <div class="legend-item"><div class="legend-dot not-answered"></div>Not Answered</div>
+        <div class="legend-item"><div class="legend-dot not-attended"></div>Not Attended</div>
+      </div>
+    </div>
+    <div class="q-grid" id="q-grid"></div>
+    <div class="sidebar-footer">
+      <button class="submit-quiz-btn" onclick="confirmSubmit()">SUBMIT QUIZ</button>
+    </div>
+  </div>
+
+  <div class="quiz-main">
+    <div class="quiz-topbar">
+      <div class="dept">ECE TECHNICAL QUIZ</div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:2%"></div>
+      </div>
+      <div class="q-counter" id="q-counter">1 / 50</div>
+    </div>
+
+    <div class="question-area">
+      <div class="q-number" id="q-number">QUESTION 01</div>
+      <div class="q-subject" id="q-subject">Subject</div>
+      <div class="q-text" id="q-text">Question text here</div>
+      <div class="options-grid" id="options-grid"></div>
+      <div class="nav-buttons">
+        <button class="nav-btn" id="btn-prev" onclick="prevQuestion()">◀ PREVIOUS</button>
+        <button class="nav-btn" id="btn-next" onclick="nextQuestion()">NEXT ▶</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4: THANK YOU -->
+<div class="page" id="page-thankyou">
+  <div class="college-header">
+    <div class="college-name">PODHIGAI COLLEGE OF ENGINEERING AND TECHNOLOGY</div>
+    <div class="divider"></div>
+    <div class="dept-name">Welcome to the Department of ECE</div>
+  </div>
+
+  <div class="thankyou-card">
+    <div class="thankyou-icon">🎓</div>
+    <div class="thankyou-title">Thank You for Attending the<br>Technical Quiz!</div>
+    <div class="thankyou-subtitle" id="thankyou-name-text">Your responses have been recorded successfully.</div>
+
+    <div class="result-note">
+      <p>📊 Results will be announced by the host.<br>Please wait patiently for further updates.</p>
+    </div>
+
+    <div class="divider"></div>
+    <div class="thankyou-creator">Created by <span>Vidhya Sagar</span> — Department of ECE</div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box">
+    <div class="modal-title">⚠ SUBMIT QUIZ?</div>
+    <div class="modal-text">Are you sure you want to submit your answers?</div>
+    <div class="modal-stats">
+      <div class="modal-stat green">
+        <div class="num" id="modal-answered">0</div>
+        <div class="lbl">Answered</div>
+      </div>
+      <div class="modal-stat red">
+        <div class="num" id="modal-not-answered">0</div>
+        <div class="lbl">Not Answered</div>
+      </div>
+      <div class="modal-stat grey">
+        <div class="num" id="modal-not-attended">0</div>
+        <div class="lbl">Not Attended</div>
+      </div>
+    </div>
+    <div class="modal-buttons">
+      <button class="modal-btn cancel" onclick="closeModal()">CANCEL</button>
+      <button class="modal-btn confirm" onclick="finalSubmit()">YES, SUBMIT</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== QUESTION BANK =====================
+const questionBank = {
+  set1: [
+    // Control Systems (7)
+    {q:"The transfer function of a system is defined as the ratio of:", opts:["Output to input in Laplace domain (with zero initial conditions)","Input to output in time domain","Output to input in time domain","Laplace of input to Laplace of output with initial conditions"], ans:0, sub:"Control Systems"},
+    {q:"A system is said to be stable if its impulse response:", opts:["Grows without bound","Decays to zero as time approaches infinity","Remains constant","Oscillates indefinitely"], ans:1, sub:"Control Systems"},
+    {q:"The root locus plot shows the variation of closed-loop poles as:", opts:["Input changes","Open-loop gain K varies from 0 to ∞","Frequency changes","Time changes"], ans:1, sub:"Control Systems"},
+    {q:"Gain margin is defined as the reciprocal of the open-loop gain at the:", opts:["Phase crossover frequency","Gain crossover frequency","Resonant frequency","Natural frequency"], ans:0, sub:"Control Systems"},
+    {q:"A PID controller combines:", opts:["Proportional and Derivative actions only","Proportional, Integral, and Derivative actions","Proportional and Integral actions only","Integral and Derivative actions only"], ans:1, sub:"Control Systems"},
+    {q:"The Bode plot of an ideal integrator has a slope of:", opts:["+20 dB/decade","−20 dB/decade","−40 dB/decade","+40 dB/decade"], ans:1, sub:"Control Systems"},
+    {q:"Which of the following is a time-domain specification?", opts:["Phase margin","Gain margin","Settling time","Bandwidth"], ans:2, sub:"Control Systems"},
+
+    // Signals and Systems (7)
+    {q:"The Fourier transform of a unit impulse δ(t) is:", opts:["0","1","jω","1/jω"], ans:1, sub:"Signals & Systems"},
+    {q:"A system is called LTI if it satisfies:", opts:["Linearity and Time-invariance","Causality and Stability","Additivity and Homogeneity only","Memory and Invertibility"], ans:0, sub:"Signals & Systems"},
+    {q:"Convolution in the time domain corresponds to __________ in the frequency domain:", opts:["Addition","Subtraction","Multiplication","Division"], ans:2, sub:"Signals & Systems"},
+    {q:"The Z-transform of a unit step sequence u[n] is:", opts:["z/(z-1)","1/(z-1)","z-1","1"], ans:0, sub:"Signals & Systems"},
+    {q:"Nyquist sampling theorem states that the sampling frequency must be:", opts:["Equal to the signal frequency","Less than twice the maximum frequency","At least twice the maximum frequency","Exactly the signal bandwidth"], ans:2, sub:"Signals & Systems"},
+    {q:"The DTFT of a sequence x[n] exists if x[n] is:", opts:["Periodic","Absolutely summable","Power signal","Bounded"], ans:1, sub:"Signals & Systems"},
+    {q:"Which property of Fourier series allows computation of power using coefficients?", opts:["Time shifting","Parseval's theorem","Duality","Convolution"], ans:1, sub:"Signals & Systems"},
+
+    // EDC (6)
+    {q:"In a p-n junction diode, the depletion region is formed due to:", opts:["Diffusion of majority carriers","External voltage","Thermal generation only","Avalanche breakdown"], ans:0, sub:"Electronic Devices & Circuits"},
+    {q:"The Early effect in BJT refers to:", opts:["Base width modulation with collector voltage","Emitter saturation","Avalanche multiplication","Junction capacitance change"], ans:0, sub:"Electronic Devices & Circuits"},
+    {q:"MOSFET operates in saturation when:", opts:["VDS < VGS - VT","VDS > VGS - VT","VGS < VT","VDS = 0"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"The threshold voltage of an n-channel MOSFET is the minimum:", opts:["VDS to sustain drain current","VGS to create inversion layer","VBS for operation","VGS for pinch-off"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"In a common-emitter BJT amplifier, the output is:", opts:["In phase with input","180° out of phase with input","90° out of phase with input","No phase shift"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"Zener diode is operated in:", opts:["Forward bias region","Reverse breakdown region","Active region","Saturation region"], ans:1, sub:"Electronic Devices & Circuits"},
+
+    // Circuit Analysis (6)
+    {q:"According to Thevenin's theorem, any linear circuit can be replaced by:", opts:["A voltage source with a series resistance","A current source with parallel resistance","An ideal voltage source","Two equal resistors"], ans:0, sub:"Circuit Analysis"},
+    {q:"The quality factor Q of an RLC series circuit is defined as:", opts:["R/√(LC)","ωL/R","R·C/L","1/ωRC"], ans:1, sub:"Circuit Analysis"},
+    {q:"Kirchhoff's Voltage Law states that:", opts:["Current entering a node equals current leaving","Sum of voltages in a closed loop is zero","Power consumed equals power generated","Resistance is constant"], ans:1, sub:"Circuit Analysis"},
+    {q:"In a parallel RLC circuit, resonance occurs when:", opts:["XL = XC","XL > XC","XC > XL","R = XL"], ans:0, sub:"Circuit Analysis"},
+    {q:"Norton's theorem involves replacing a network with:", opts:["A voltage source in series with impedance","A current source in parallel with impedance","Two current sources","A capacitor in parallel with resistor"], ans:1, sub:"Circuit Analysis"},
+    {q:"The time constant of an RC circuit is:", opts:["R/C","RC","1/RC","√(RC)"], ans:1, sub:"Circuit Analysis"},
+
+    // Embedded Systems (6)
+    {q:"In an embedded system, RTOS stands for:", opts:["Remote Terminal Operating System","Real-Time Operating System","Reduced Time OS","Random Task OS"], ans:1, sub:"Embedded Systems"},
+    {q:"Which bus protocol is commonly used for short-distance communication in embedded systems?", opts:["USB","Ethernet","I2C","PCIe"], ans:2, sub:"Embedded Systems"},
+    {q:"A watchdog timer in an embedded system is used to:", opts:["Measure execution time","Reset the system if software hangs","Generate PWM signals","Interface with sensors"], ans:1, sub:"Embedded Systems"},
+    {q:"SPI communication uses how many wires (excluding power)?", opts:["2","3","4","6"], ans:2, sub:"Embedded Systems"},
+    {q:"Harvard architecture differs from Von Neumann in:", opts:["Having separate memory for data and instructions","Using RISC only","Having no cache","Using virtual memory"], ans:0, sub:"Embedded Systems"},
+    {q:"The ARM Cortex-M series is primarily designed for:", opts:["Desktop computing","High-performance servers","Microcontroller applications","Graphics processing"], ans:2, sub:"Embedded Systems"},
+
+    // VLSI (6)
+    {q:"CMOS logic uses complementary pairs of:", opts:["NPN and PNP BJTs","NMOS and PMOS transistors","Diodes and resistors","JFETs and MOSFETs"], ans:1, sub:"VLSI Design"},
+    {q:"The propagation delay in a CMOS gate is primarily affected by:", opts:["Supply voltage only","Load capacitance and transistor size","Temperature only","Input frequency only"], ans:1, sub:"VLSI Design"},
+    {q:"In VLSI design, DRC stands for:", opts:["Digital Register Control","Design Rule Check","Data Routing Circuit","Dynamic Range Control"], ans:1, sub:"VLSI Design"},
+    {q:"Static power dissipation in CMOS occurs due to:", opts:["Switching activity","Leakage currents","Clock frequency","Load capacitance"], ans:1, sub:"VLSI Design"},
+    {q:"Which HDL is standardized by IEEE 1364?", opts:["VHDL","Verilog","SystemVerilog","ABEL"], ans:1, sub:"VLSI Design"},
+    {q:"Latch-up in CMOS is caused by:", opts:["Excessive clock frequency","Parasitic BJT action creating feedback","High temperature","Low supply voltage"], ans:1, sub:"VLSI Design"},
+
+    // Digital Systems (6)
+    {q:"The Boolean expression A·(A + B) simplifies to:", opts:["A + B","A","B","A·B"], ans:1, sub:"Digital Systems & Design"},
+    {q:"A JK flip-flop with J=1 and K=1 operates in:", opts:["Set mode","Reset mode","Toggle mode","Hold mode"], ans:2, sub:"Digital Systems & Design"},
+    {q:"A 4-to-1 multiplexer requires how many select lines?", opts:["1","2","3","4"], ans:1, sub:"Digital Systems & Design"},
+    {q:"Gray code is preferred over binary in shaft encoders because:", opts:["It uses fewer bits","Only one bit changes between consecutive values","It is easier to decode","It supports more states"], ans:1, sub:"Digital Systems & Design"},
+    {q:"A full adder has how many inputs?", opts:["1","2","3","4"], ans:2, sub:"Digital Systems & Design"},
+    {q:"Mealy machine output depends on:", opts:["Current state only","Current state and current input","Next state only","Input only"], ans:1, sub:"Digital Systems & Design"},
+
+    // Network Security (6)
+    {q:"AES (Advanced Encryption Standard) uses a key size of:", opts:["56-bit only","128, 192, or 256-bit","512-bit","64-bit"], ans:1, sub:"Network & Security"},
+    {q:"A denial-of-service attack aims to:", opts:["Steal data","Encrypt files for ransom","Overwhelm a system to make it unavailable","Intercept communications"], ans:2, sub:"Network & Security"},
+    {q:"In RSA encryption, the security depends on the difficulty of:", opts:["Solving differential equations","Factoring large prime numbers","Matrix inversion","Polynomial expansion"], ans:1, sub:"Network & Security"},
+    {q:"A firewall primarily operates at which OSI layer?", opts:["Physical","Data Link","Network","Application"], ans:2, sub:"Network & Security"},
+    {q:"SSL/TLS protocol is used to provide:", opts:["Routing between networks","Secure communication over the internet","Data compression","Error correction"], ans:1, sub:"Network & Security"},
+    {q:"Which attack involves intercepting communication between two parties?", opts:["Phishing","Man-in-the-middle","SQL injection","Buffer overflow"], ans:1, sub:"Network & Security"},
+  ],
+
+  set2: [
+    {q:"The steady-state error for a unit ramp input in a Type-1 system is:", opts:["Zero","Infinite","1/Kv","1/Ka"], ans:2, sub:"Control Systems"},
+    {q:"Routh-Hurwitz criterion determines system stability by analyzing:", opts:["Root locations graphically","Coefficients of the characteristic equation","Frequency response","Step response"], ans:1, sub:"Control Systems"},
+    {q:"Phase margin is the difference between -180° and the phase of open loop TF at:", opts:["Phase crossover frequency","Gain crossover frequency","Natural frequency","Corner frequency"], ans:1, sub:"Control Systems"},
+    {q:"The damping ratio ζ = 1 corresponds to a system that is:", opts:["Overdamped","Underdamped","Critically damped","Undamped"], ans:2, sub:"Control Systems"},
+    {q:"In a feedback control system, increasing the proportional gain:", opts:["Eliminates steady-state error","Reduces steady-state error but may cause instability","Has no effect on error","Improves phase margin"], ans:1, sub:"Control Systems"},
+    {q:"The inverse Laplace transform of 1/s² is:", opts:["δ(t)","u(t)","t·u(t)","e^(-t)"], ans:2, sub:"Signals & Systems"},
+    {q:"Aliasing occurs when the sampling rate is:", opts:["Equal to signal frequency","Greater than Nyquist rate","Less than Nyquist rate","Exactly twice signal frequency"], ans:2, sub:"Signals & Systems"},
+    {q:"A periodic signal with period T has fundamental frequency:", opts:["T","1/T","2/T","T/2"], ans:1, sub:"Signals & Systems"},
+    {q:"The ROC of the Z-transform for a causal signal lies:", opts:["Inside a circle","Outside a circle","On the unit circle","Everywhere"], ans:1, sub:"Signals & Systems"},
+    {q:"A bipolar junction transistor (BJT) has:", opts:["Two junctions and three terminals","One junction and two terminals","Three junctions","No junctions"], ans:0, sub:"Electronic Devices & Circuits"},
+    {q:"The knee voltage for a silicon diode is approximately:", opts:["0.3V","0.7V","1.2V","0V"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"The pinch-off voltage in a JFET is the voltage at which:", opts:["Gate current becomes zero","Drain current becomes zero","Channel is completely depleted","Breakdown occurs"], ans:2, sub:"Electronic Devices & Circuits"},
+    {q:"Superposition theorem is valid for:", opts:["Non-linear circuits","Linear circuits only","Circuits with capacitors only","Time-varying circuits only"], ans:1, sub:"Circuit Analysis"},
+    {q:"Maximum power transfer occurs when load resistance equals:", opts:["Zero","Infinity","Source resistance","Twice source resistance"], ans:2, sub:"Circuit Analysis"},
+    {q:"In a purely inductive circuit, current __________ voltage by 90°:", opts:["Leads","Lags","Is in phase with","Has no relationship to"], ans:1, sub:"Circuit Analysis"},
+    {q:"UART communication is:", opts:["Synchronous parallel","Asynchronous serial","Synchronous serial","Parallel only"], ans:1, sub:"Embedded Systems"},
+    {q:"In embedded systems, volatile keyword prevents:", opts:["Memory allocation","Compiler optimization of a variable","Interrupt handling","Power saving"], ans:1, sub:"Embedded Systems"},
+    {q:"PWM is primarily used in embedded systems for:", opts:["Digital communication","Motor speed control and signal generation","Memory access","Interrupt handling"], ans:1, sub:"Embedded Systems"},
+    {q:"Fan-out in digital logic refers to:", opts:["Number of inputs a gate can accept","Number of gate outputs that can drive other gates","Power consumption","Speed of operation"], ans:1, sub:"Digital Systems & Design"},
+    {q:"A decoder with n inputs can activate:", opts:["n outputs","2^n outputs","n² outputs","n/2 outputs"], ans:1, sub:"Digital Systems & Design"},
+    {q:"The output of an SR flip-flop when S=0 and R=0 is:", opts:["Set to 1","Reset to 0","No change","Invalid"], ans:2, sub:"Digital Systems & Design"},
+    {q:"In VLSI, threshold voltage is adjusted by:", opts:["Changing oxide thickness only","Changing supply voltage","Channel doping and oxide thickness","Temperature control only"], ans:2, sub:"VLSI Design"},
+    {q:"Elmore delay model is used in VLSI for estimating:", opts:["Power consumption","RC tree delays","Leakage current","Area estimation"], ans:1, sub:"VLSI Design"},
+    {q:"In CMOS, the noise margin is defined as:", opts:["Difference between supply voltage levels","Minimum voltage difference ensuring logic-level discrimination","Maximum operating frequency","Leakage current threshold"], ans:1, sub:"VLSI Design"},
+    {q:"Symmetric key cryptography uses:", opts:["Different keys for encryption and decryption","Same key for encryption and decryption","Public key infrastructure","Hashing only"], ans:1, sub:"Network & Security"},
+    {q:"The Diffie-Hellman protocol is used for:", opts:["Data encryption","Key exchange","Digital signatures","Authentication"], ans:1, sub:"Network & Security"},
+    {q:"A hash function in cryptography produces:", opts:["Variable length output","Fixed length output","Reversible output","Encrypted data"], ans:1, sub:"Network & Security"},
+    {q:"The OSI model has how many layers?", opts:["4","5","7","8"], ans:2, sub:"Network & Security"},
+    {q:"TCP differs from UDP primarily in that TCP:", opts:["Is faster","Provides unreliable transmission","Provides reliable, connection-oriented transmission","Uses less bandwidth"], ans:2, sub:"Network & Security"},
+    {q:"In VLSI layout, LVS stands for:", opts:["Layout Versus Schematic","Low Voltage Standard","Logic Verification System","Layer Validation Step"], ans:0, sub:"VLSI Design"},
+    {q:"The number of minterms in a 3-variable Boolean function is:", opts:["4","6","8","16"], ans:2, sub:"Digital Systems & Design"},
+    {q:"In sequential circuits, the present state depends on:", opts:["Only current input","Previous state and current input","Future inputs","Output only"], ans:1, sub:"Digital Systems & Design"},
+    {q:"The bandwidth of an amplifier is defined as the frequency range where gain is:", opts:["Maximum","Minimum","Within 3dB of maximum gain","Exactly unity"], ans:2, sub:"Electronic Devices & Circuits"},
+    {q:"The slew rate of an op-amp determines:", opts:["Input impedance","Maximum rate of change of output voltage","Open-loop gain","Bandwidth"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"An ideal op-amp has:", opts:["Zero input impedance","Finite output impedance","Infinite bandwidth and gain","Finite gain only"], ans:2, sub:"Electronic Devices & Circuits"},
+    {q:"Which transform is most suitable for discrete aperiodic signals?", opts:["Fourier Series","Continuous Fourier Transform","DTFT","Z-Transform"], ans:2, sub:"Signals & Systems"},
+    {q:"The step response of an underdamped second-order system exhibits:", opts:["Exponential decay","Overshoot and oscillations","Monotonic rise","Immediate settling"], ans:1, sub:"Control Systems"},
+    {q:"Crossover distortion occurs in:", opts:["Class A amplifiers","Class B amplifiers","Class C amplifiers","Class D amplifiers"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"In Embedded C, a bit-field structure is used to:", opts:["Store floating point values","Pack data efficiently at bit level","Allocate dynamic memory","Handle interrupts"], ans:1, sub:"Embedded Systems"},
+    {q:"The 2's complement of an 8-bit number 00110101 is:", opts:["11001010","11001011","11001100","10110101"], ans:1, sub:"Digital Systems & Design"},
+    {q:"DRAM requires periodic refresh because:", opts:["It uses flip-flops","Charge leaks from capacitors","It has high power consumption","It uses CMOS technology"], ans:1, sub:"VLSI Design"},
+    {q:"The concept of virtual memory allows:", opts:["Faster CPU execution","Programs to use more memory than physically available","Permanent data storage","Parallel processing"], ans:1, sub:"Embedded Systems"},
+    {q:"In a delta-star transformation, if all delta resistances are R, star resistance is:", opts:["3R","R/3","R","R²/3"], ans:1, sub:"Circuit Analysis"},
+    {q:"Millman's theorem is applicable when multiple voltage sources are:", opts:["In series","In parallel with series resistance","Cascaded","In Wheatstone bridge"], ans:1, sub:"Circuit Analysis"},
+    {q:"The gain of an inverting op-amp amplifier is:", opts:["Rf/Rin","-Rf/Rin","Rin/Rf","1 + Rf/Rin"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"A linear phase filter has:", opts:["Zero group delay","Constant group delay","Variable group delay","Infinite group delay"], ans:1, sub:"Signals & Systems"},
+    {q:"The MOSFET operates in the triode region when:", opts:["VGS < VT","VDS > VGS - VT","VDS < VGS - VT","VGS = 0"], ans:2, sub:"Electronic Devices & Circuits"},
+    {q:"In a CMOS inverter, when input is LOW, the output is:", opts:["LOW","HIGH","Floating","Unknown"], ans:1, sub:"VLSI Design"},
+    {q:"Packet filtering in network security works at:", opts:["Application layer","Transport layer","Network layer","Physical layer"], ans:2, sub:"Network & Security"},
+    {q:"The CRC error detection method uses:", opts:["Modulo-2 polynomial division","XOR of data bits only","Parity bits","Hamming code"], ans:0, sub:"Network & Security"},
+  ],
+
+  set3: [
+    {q:"The Mason's gain formula is used to find the transfer function of:", opts:["Mechanical systems","Signal flow graphs","Block diagrams only","Electrical circuits only"], ans:1, sub:"Control Systems"},
+    {q:"In state-space representation, the number of state variables equals:", opts:["Number of inputs","Order of the system","Number of outputs","Number of poles"], ans:1, sub:"Control Systems"},
+    {q:"A second-order system has transfer function ωn²/(s²+2ζωns+ωn²). The natural frequency is:", opts:["ζ","ωn","2ζωn","ωn²"], ans:1, sub:"Control Systems"},
+    {q:"The Nyquist stability criterion determines stability by examining:", opts:["Root locus","Frequency response plot (Nyquist plot)","Time response","Bode plot only"], ans:1, sub:"Control Systems"},
+    {q:"Lead compensator improves:", opts:["Steady-state accuracy","Transient response and bandwidth","Noise rejection","DC gain"], ans:1, sub:"Control Systems"},
+    {q:"DFT of a sequence of N samples produces:", opts:["N/2 frequency samples","N frequency samples","2N frequency samples","Infinite samples"], ans:1, sub:"Signals & Systems"},
+    {q:"The energy spectral density is the:", opts:["Square root of Fourier transform","Square of magnitude of Fourier transform","Fourier transform of energy","Inverse Fourier transform"], ans:1, sub:"Signals & Systems"},
+    {q:"An ideal low-pass filter has impulse response that is:", opts:["Causal","Non-causal (sinc function)","Exponential","Unit step"], ans:1, sub:"Signals & Systems"},
+    {q:"The transition from depletion to inversion in MOSFET is called:", opts:["Threshold","Strong inversion","Weak inversion","Accumulation"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"The transconductance gm of a MOSFET in saturation is proportional to:", opts:["VDS","VGS - VT","VBS","VDD"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"A cascode amplifier provides:", opts:["High input impedance only","Increased bandwidth and better isolation","Lower voltage gain","Reduced power consumption"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"In an RLC circuit, the impedance at resonance is:", opts:["Maximum","Zero","Equal to R","Purely reactive"], ans:2, sub:"Circuit Analysis"},
+    {q:"Coupled circuits use the concept of:", opts:["Self-inductance only","Mutual inductance","Capacitive coupling only","Resistive coupling"], ans:1, sub:"Circuit Analysis"},
+    {q:"Two-port network parameters Z, Y, H, and ABCD relate:", opts:["Only voltages","Input and output port voltages and currents","Power and efficiency","Frequency and time"], ans:1, sub:"Circuit Analysis"},
+    {q:"CAN bus protocol is widely used in:", opts:["Consumer electronics","Automotive embedded systems","Internet routing","Audio systems"], ans:1, sub:"Embedded Systems"},
+    {q:"In RTOS, priority inversion problem occurs when:", opts:["High priority task waits for low priority task holding a resource","Tasks have equal priority","Interrupts are disabled","Memory is full"], ans:0, sub:"Embedded Systems"},
+    {q:"The Harvard architecture advantage in embedded systems is:", opts:["Simplified design","Simultaneous fetch of instruction and data","Lower cost","Single bus operation"], ans:1, sub:"Embedded Systems"},
+    {q:"A Karnaugh map for 4 variables has:", opts:["8 cells","16 cells","32 cells","4 cells"], ans:1, sub:"Digital Systems & Design"},
+    {q:"A shift register can be used as:", opts:["Counter and delay element","Only counter","Only delay element","Multiplexer only"], ans:0, sub:"Digital Systems & Design"},
+    {q:"Don't care conditions in Boolean minimization:", opts:["Must be assigned 0","Must be assigned 1","Can be used to simplify expression","Are ignored always"], ans:2, sub:"Digital Systems & Design"},
+    {q:"In VLSI, the process of mapping gate-level netlist to physical layout is called:", opts:["Synthesis","Place and Route","Simulation","Verification"], ans:1, sub:"VLSI Design"},
+    {q:"FINFET technology was introduced to address:", opts:["High power consumption","Short channel effects in deeply scaled CMOS","Slow switching speed","High manufacturing cost"], ans:1, sub:"VLSI Design"},
+    {q:"Standard cell library in VLSI contains:", opts:["User-defined cells only","Pre-characterized logic cells","Analog circuits only","Memory cells only"], ans:1, sub:"VLSI Design"},
+    {q:"In network security, a DMZ (Demilitarized Zone) is:", opts:["A classified network","A neutral network segment between public and private networks","An encrypted tunnel","A type of VPN"], ans:1, sub:"Network & Security"},
+    {q:"Perfect forward secrecy ensures that:", opts:["Encryption is unbreakable","Compromise of long-term keys doesn't compromise past sessions","Data is transmitted faster","Authentication is stronger"], ans:1, sub:"Network & Security"},
+    {q:"In public key infrastructure, a certificate authority:", opts:["Encrypts data","Issues and verifies digital certificates","Routes packets","Stores passwords"], ans:1, sub:"Network & Security"},
+    {q:"The bandwidth of an RC low-pass filter is:", opts:["1/RC","1/(2πRC)","RC","2πRC"], ans:1, sub:"Circuit Analysis"},
+    {q:"Reciprocity theorem states that in a linear passive network:", opts:["Power is constant","The ratio of excitation to response is the same when positions are interchanged","Voltage is constant","Resistance doesn't change"], ans:1, sub:"Circuit Analysis"},
+    {q:"A delta-connected load has three impedances of 60Ω each. The equivalent star impedance is:", opts:["180Ω","20Ω","60Ω","30Ω"], ans:1, sub:"Circuit Analysis"},
+    {q:"The Laplace transform of e^(-at)·u(t) is:", opts:["1/s","1/(s+a)","a/(s+a)","s/(s+a)"], ans:1, sub:"Signals & Systems"},
+    {q:"An energy signal has:", opts:["Infinite energy and finite power","Finite energy and zero average power","Infinite power","Finite power and energy"], ans:1, sub:"Signals & Systems"},
+    {q:"Bilinear transformation in digital filter design preserves:", opts:["Frequency response exactly","Stability from analog to digital domain","Linearity","Phase response only"], ans:1, sub:"Signals & Systems"},
+    {q:"The channel length modulation parameter λ in MOSFETs affects:", opts:["Threshold voltage","Output resistance in saturation","Transconductance","Gate capacitance"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"Differential amplifier is used to:", opts:["Amplify common-mode signals","Amplify only difference between two inputs","Buffer signals","Convert voltage to current"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"In BJT, the current gain β (hFE) is defined as:", opts:["IC/IB","IC/IE","IB/IC","IE/IB"], ans:0, sub:"Electronic Devices & Circuits"},
+    {q:"Metastability in digital circuits occurs in:", opts:["Combinational circuits","Flip-flops when setup or hold time is violated","Memory read operations","Clock generation circuits"], ans:1, sub:"Digital Systems & Design"},
+    {q:"In VLSI design flow, RTL synthesis converts:", opts:["Layout to schematic","HDL description to gate-level netlist","Schematic to layout","Gates to transistors"], ans:1, sub:"VLSI Design"},
+    {q:"The CMRR of a differential amplifier is:", opts:["Differential gain × Common-mode gain","Differential gain / Common-mode gain","Common-mode gain only","Input impedance ratio"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"In embedded systems, memory-mapped I/O means:", opts:["I/O devices share the same address space as memory","I/O has separate address space","I/O uses DMA exclusively","Memory is used for communication"], ans:0, sub:"Embedded Systems"},
+    {q:"The settling time of a control system depends primarily on:", opts:["Natural frequency alone","Damping ratio and natural frequency","Input magnitude","Open-loop gain only"], ans:1, sub:"Control Systems"},
+    {q:"IEEE 802.11 standard refers to:", opts:["Ethernet","Wi-Fi (Wireless LAN)","Bluetooth","Zigbee"], ans:1, sub:"Network & Security"},
+    {q:"In VLSI, power gating is used to:", opts:["Increase clock speed","Reduce static power by cutting off idle blocks","Improve signal integrity","Reduce area"], ans:1, sub:"VLSI Design"},
+    {q:"A band-pass filter passes signals:", opts:["Above a cutoff frequency","Below a cutoff frequency","Between two cutoff frequencies","At all frequencies equally"], ans:2, sub:"Signals & Systems"},
+    {q:"The Q-factor of a parallel resonant circuit relates to:", opts:["Bandwidth / Resonant frequency","Resonant frequency / Bandwidth","Gain at resonance","Impedance at resonance"], ans:1, sub:"Circuit Analysis"},
+    {q:"In control systems, integral action eliminates:", opts:["Transient oscillations","Steady-state error for step input","Phase lag","Disturbances only"], ans:1, sub:"Control Systems"},
+    {q:"EEPROM differs from Flash memory in that EEPROM:", opts:["Is faster to erase","Can erase byte by byte","Has higher capacity","Uses less power"], ans:1, sub:"Embedded Systems"},
+    {q:"The number of states in a Moore machine is determined by:", opts:["Number of inputs","Number of state variables (2^n)","Number of outputs","Clock frequency"], ans:1, sub:"Digital Systems & Design"},
+    {q:"Channel capacity according to Shannon's theorem depends on:", opts:["Bandwidth and SNR","Modulation scheme only","Frequency only","Antenna gain"], ans:0, sub:"Network & Security"},
+    {q:"In CMOS technology, body effect refers to:", opts:["Variation of threshold voltage with source-body voltage","Current flow through substrate","Gate oxide damage","Latch-up condition"], ans:0, sub:"VLSI Design"},
+    {q:"The superposition of sinusoids with incommensurate frequencies results in:", opts:["A periodic signal","A non-periodic signal","A DC signal","An impulse"], ans:1, sub:"Signals & Systems"},
+  ],
+
+  set4: [
+    {q:"In state variable analysis, controllability means:", opts:["Output can be measured","Any state can be reached from any initial state using appropriate input","System is stable","Output tracks input exactly"], ans:1, sub:"Control Systems"},
+    {q:"The Lag compensator is used to improve:", opts:["Transient response speed","Steady-state accuracy without significantly affecting bandwidth","Bandwidth","Phase margin directly"], ans:1, sub:"Control Systems"},
+    {q:"Sensitivity function S(s) in control systems represents:", opts:["Effect of plant gain change on closed-loop","Effect of input disturbance on output","Open-loop gain","Complementary sensitivity"], ans:0, sub:"Control Systems"},
+    {q:"In digital control systems, the sampling theorem ensures:", opts:["Faster response","No aliasing of control signals","Reduced quantization noise","Better steady-state"], ans:1, sub:"Control Systems"},
+    {q:"The autocorrelation of white noise is:", opts:["Sinusoidal","An impulse function","A step function","Triangular"], ans:1, sub:"Signals & Systems"},
+    {q:"The Hilbert transform is used to find the:", opts:["Analytic signal","Amplitude spectrum","Power spectrum","Causal part of signal"], ans:0, sub:"Signals & Systems"},
+    {q:"In the short-time Fourier transform (STFT):", opts:["Window function is not used","Signal is analyzed using overlapping windows","Only stationary signals can be analyzed","Phase is discarded"], ans:1, sub:"Signals & Systems"},
+    {q:"Impact ionization in semiconductor devices leads to:", opts:["Reduced mobility","Avalanche breakdown","Increased threshold voltage","Better linearity"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"The Kirk effect (base pushout) in BJT occurs at:", opts:["Low collector current","High collector current causing base widening","High temperatures","Reverse bias conditions"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"A Gilbert cell is used in RF circuits for:", opts:["Amplification only","Frequency mixing/multiplication","Filtering","Oscillation"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"Gyrator is a two-port element that can simulate:", opts:["Resistance using capacitance","Inductance using capacitance","Capacitance using resistance","Mutual inductance"], ans:1, sub:"Circuit Analysis"},
+    {q:"The Tellegen's theorem states that:", opts:["Sum of currents at node is zero","Sum of all branch powers in a network is zero","Voltages in a loop sum to zero","Resistance is linear"], ans:1, sub:"Circuit Analysis"},
+    {q:"In n-port network analysis, the scattering parameters (S-parameters) are used at:", opts:["DC conditions","High frequencies/microwave frequencies","Low frequencies only","Audio frequencies"], ans:1, sub:"Circuit Analysis"},
+    {q:"DMA (Direct Memory Access) in embedded systems:", opts:["Requires CPU for every transfer","Transfers data between memory and peripherals without CPU intervention","Slows down system","Is used only for serial communication"], ans:1, sub:"Embedded Systems"},
+    {q:"Mutual exclusion in RTOS is enforced using:", opts:["Spinlocks","Semaphores and mutexes","Interrupts disabled permanently","Memory partitioning"], ans:1, sub:"Embedded Systems"},
+    {q:"In embedded systems, cache coherence problem arises in:", opts:["Single core systems","Multi-core systems with shared memory","Systems without OS","RISC architectures only"], ans:1, sub:"Embedded Systems"},
+    {q:"A hazard in combinational circuits refers to:", opts:["Power surge","Unwanted transient glitches in output","Voltage level mismatch","Clock skew"], ans:1, sub:"Digital Systems & Design"},
+    {q:"Booth's algorithm is used for:", opts:["Division","Efficient multiplication of 2's complement numbers","Square root computation","Floating point addition"], ans:1, sub:"Digital Systems & Design"},
+    {q:"A LFSR (Linear Feedback Shift Register) is used for:", opts:["Generating pseudo-random sequences","General purpose arithmetic","Sorting algorithms","Memory addressing"], ans:0, sub:"Digital Systems & Design"},
+    {q:"Clock tree synthesis in VLSI aims to:", opts:["Maximize clock frequency","Minimize clock skew and ensure equal distribution","Reduce chip area","Increase power"], ans:1, sub:"VLSI Design"},
+    {q:"In VLSI, floorplanning involves:", opts:["Transistor sizing","Determining locations of major functional blocks","Routing metal connections","Gate-level netlist creation"], ans:1, sub:"VLSI Design"},
+    {q:"Multi-threshold CMOS (MTCMOS) uses:", opts:["Multiple supply voltages","Transistors with different threshold voltages for power optimization","Multiple clock domains","Dual-ported memory"], ans:1, sub:"VLSI Design"},
+    {q:"Zero-knowledge proof in cryptography allows:", opts:["Proving knowledge of a secret without revealing it","Encrypting data without a key","Fast key generation","Breaking encryption"], ans:0, sub:"Network & Security"},
+    {q:"BGP (Border Gateway Protocol) is used for:", opts:["Internal network routing","Inter-domain routing between ASes on the internet","Physical layer communication","Application layer security"], ans:1, sub:"Network & Security"},
+    {q:"HMAC (Hash-based Message Authentication Code) provides:", opts:["Encryption only","Both data integrity and authentication","Confidentiality only","Digital signatures only"], ans:1, sub:"Network & Security"},
+    {q:"The Wigner-Ville distribution is a type of:", opts:["Power spectral density estimate","Time-frequency representation","Wavelet transform","Correlation function"], ans:1, sub:"Signals & Systems"},
+    {q:"Companding in PCM is used to:", opts:["Increase bandwidth","Reduce quantization noise for low amplitude signals","Improve synchronization","Increase sampling rate"], ans:1, sub:"Signals & Systems"},
+    {q:"The matched filter maximizes:", opts:["Bandwidth","SNR at the sampling instant","Phase linearity","Dynamic range"], ans:1, sub:"Signals & Systems"},
+    {q:"Hot-carrier injection in MOSFETs causes:", opts:["Improved performance","Reliability degradation over time","Reduced threshold voltage","Better transconductance"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"In a charge pump circuit:", opts:["Charge is removed from capacitors","Capacitors are used to generate higher voltage than supply","Current is amplified","Voltage is regulated linearly"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"The bandwidth enhancement technique using inductive peaking:", opts:["Reduces gain","Extends amplifier bandwidth by resonating with parasitic capacitances","Adds noise","Increases power consumption linearly"], ans:1, sub:"Electronic Devices & Circuits"},
+    {q:"Power factor correction in AC circuits aims to make the power factor:", opts:["Zero","Unity (1.0)","0.5","As low as possible"], ans:1, sub:"Circuit Analysis"},
+    {q:"Transmission line effects become significant when line length is:", opts:["Less than 1% of wavelength","Greater than λ/10","Exactly one wavelength","Independent of wavelength"], ans:1, sub:"Circuit Analysis"},
+    {q:"The Cauer synthesis method in network synthesis involves:", opts:["Continued fraction expansion","Partial fraction expansion","Matrix methods","Nodal analysis"], ans:0, sub:"Circuit Analysis"},
+    {q:"Interrupt latency in embedded systems is the time from:", opts:["Power on to first interrupt","Interrupt occurrence to start of its ISR","Start to end of ISR","Between two consecutive interrupts"], ans:1, sub:"Embedded Systems"},
+    {q:"In VLSI testing, ATPG (Automatic Test Pattern Generation) generates:", opts:["Random test vectors","Test vectors to detect specific faults","Layout patterns","Clock patterns"], ans:1, sub:"VLSI Design"},
+    {q:"The concept of timing closure in VLSI means:", opts:["Clock is generated","All timing constraints are met after place and route","Layout is complete","Power analysis is done"], ans:1, sub:"VLSI Design"},
+    {q:"Elliptic curve cryptography (ECC) achieves security with:", opts:["Larger keys than RSA","Smaller keys than RSA for equivalent security","Same key size as RSA","No keys"], ans:1, sub:"Network & Security"},
+    {q:"In network intrusion detection, a false negative means:", opts:["Flagging normal traffic as attack","Missing an actual attack","Correctly identifying normal traffic","Correctly blocking an attack"], ans:1, sub:"Network & Security"},
+    {q:"The decimation-in-time FFT algorithm has computational complexity:", opts:["O(N²)","O(N log N)","O(N)","O(log N)"], ans:1, sub:"Signals & Systems"},
+    {q:"Oversampling in ADC is used to:", opts:["Reduce conversion speed","Improve effective resolution by averaging","Increase quantization noise","Reduce anti-aliasing filter requirement only"], ans:1, sub:"Signals & Systems"},
+    {q:"In CMOS layout, poly-silicon is primarily used as:", opts:["Metal interconnect","Gate electrode of MOSFET","Substrate contact","Via material"], ans:1, sub:"VLSI Design"},
+    {q:"For a stable system, all poles must lie in the:", opts:["Right half of s-plane","Left half of s-plane","On the imaginary axis","On the real axis only"], ans:1, sub:"Control Systems"},
+    {q:"The describing function method in nonlinear control analyzes:", opts:["Limit cycles and stability of nonlinear systems","Linear frequency response","State space models","Digital control systems"], ans:0, sub:"Control Systems"},
+    {q:"In ECG signal processing, baseline wander removal uses:", opts:["High-pass filtering","Low-pass filtering","Band-stop filtering","No filtering"], ans:0, sub:"Signals & Systems"},
+    {q:"DRAM refresh is typically required every:", opts:["1 second","64 milliseconds","1 microsecond","1 nanosecond"], ans:1, sub:"Embedded Systems"},
+    {q:"Scan chain in VLSI testing converts:", opts:["Flip-flops to serial shift register for testing","Combinational to sequential logic","Analog to digital signals","Layout to netlist"], ans:0, sub:"VLSI Design"},
+    {q:"The ARP protocol resolves:", opts:["IP address to MAC address","MAC address to IP address","Domain name to IP address","IP address to port number"], ans:0, sub:"Network & Security"},
+    {q:"In digital design, setup time violation causes:", opts:["Correct but slow operation","Metastability and potential wrong data capture","Increased power","Reduced fan-out"], ans:1, sub:"Digital Systems & Design"},
+    {q:"Crystal oscillator is used in embedded systems for:", opts:["Power regulation","Accurate clock generation","Temperature sensing","Communication only"], ans:1, sub:"Embedded Systems"},
+  ]
+};
+
+// ===================== APP STATE =====================
+let userData = {};
+let questions = [];
+let answers = [];
+let visited = [];
+let currentQ = 0;
+let timerInterval = null;
+let timeLeft = 25 * 60;
+let quizSubmitted = false;
+
+// ===================== REGISTRATION =====================
+function submitRegistration() {
+  const name = document.getElementById('reg-name').value.trim();
+  const college = document.getElementById('reg-college').value.trim();
+  const year = document.getElementById('reg-year').value.trim();
+  const dept = document.getElementById('reg-dept').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const phone = document.getElementById('reg-phone').value.trim();
+  const errDiv = document.getElementById('reg-error');
+
+  // Validate all fields
+  if (!name || !college || !year || !dept || !email || !phone) {
+    errDiv.textContent = '⚠ Please fill in all fields before proceeding.';
+    errDiv.style.display = 'block';
+    return;
+  }
+
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    errDiv.textContent = '⚠ Please enter a valid email address.';
+    errDiv.style.display = 'block';
+    return;
+  }
+
+  // Phone validation
+  const phoneRegex = /^[0-9]{10}$/;
+  if (!phoneRegex.test(phone.replace(/\s/g,''))) {
+    errDiv.textContent = '⚠ Please enter a valid 10-digit phone number.';
+    errDiv.style.display = 'block';
+    return;
+  }
+
+  // Department check - must be ECE
+  if (dept.toLowerCase().trim() !== 'ece') {
+    errDiv.textContent = '🚫 Access Denied! This quiz is exclusively for ECE Department students. Your department does not match.';
+    errDiv.style.color = 'var(--red)';
+    errDiv.style.display = 'block';
+    return;
+  }
+
+  errDiv.style.display = 'none';
+  userData = { name, college, year, dept: dept.toUpperCase(), email, phone };
+
+  // Go to welcome page
+  document.getElementById('page-register').classList.remove('active');
+  document.getElementById('page-welcome').classList.add('active');
+  document.getElementById('welcome-name').textContent = `Welcome, ${name}!`;
+  document.getElementById('welcome-info').textContent = `${year} Year | ${college} | ${dept.toUpperCase()} Department`;
+}
+
+// ===================== QUIZ SETUP =====================
+function startQuiz() {
+  // Randomly pick one of the 4 sets
+  const sets = ['set1', 'set2', 'set3', 'set4'];
+  const chosenSet = sets[Math.floor(Math.random() * sets.length)];
+  
+  // Shuffle the chosen set
+  const allQ = [...questionBank[chosenSet]];
+  shuffleArray(allQ);
+  questions = allQ.slice(0, 50);
+
+  answers = new Array(50).fill(null);
+  visited = new Array(50).fill(false);
+  visited[0] = true;
+  currentQ = 0;
+  timeLeft = 25 * 60;
+  quizSubmitted = false;
+
+  document.getElementById('page-welcome').classList.remove('active');
+  document.getElementById('page-quiz').classList.add('active');
+
+  buildQGrid();
+  renderQuestion();
+  startTimer();
+}
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+// ===================== TIMER =====================
+function startTimer() {
+  const timerEl = document.getElementById('timer');
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+    const s = (timeLeft % 60).toString().padStart(2, '0');
+    timerEl.textContent = `${m}:${s}`;
+
+    if (timeLeft <= 300) timerEl.className = 'timer-display warning';
+    if (timeLeft <= 60) timerEl.className = 'timer-display danger';
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timerEl.textContent = '00:00';
+      finalSubmit();
+    }
+  }, 1000);
+}
+
+// ===================== QUESTION GRID =====================
+function buildQGrid() {
+  const grid = document.getElementById('q-grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 50; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'q-btn';
+    btn.textContent = i + 1;
+    btn.onclick = () => goToQuestion(i);
+    btn.id = `qbtn-${i}`;
+    grid.appendChild(btn);
+  }
+  updateQGrid();
+}
+
+function updateQGrid() {
+  for (let i = 0; i < 50; i++) {
+    const btn = document.getElementById(`qbtn-${i}`);
+    if (!btn) continue;
+    btn.className = 'q-btn';
+    if (i === currentQ) btn.classList.add('current');
+    if (answers[i] !== null) btn.classList.add('answered');
+    else if (visited[i]) btn.classList.add('not-answered');
+  }
+}
+
+// ===================== RENDER QUESTION =====================
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('q-number').textContent = `QUESTION ${String(currentQ + 1).padStart(2, '0')}`;
+  document.getElementById('q-subject').textContent = `📚 ${q.sub}`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-counter').textContent = `${currentQ + 1} / 50`;
+
+  const progress = ((currentQ + 1) / 50) * 100;
+  document.getElementById('progress-fill').style.width = `${progress}%`;
+
+  const labels = ['A', 'B', 'C', 'D'];
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    if (answers[currentQ] === i) btn.classList.add('selected');
+    btn.innerHTML = `<span class="opt-label">${labels[i]}</span>${opt}`;
+    btn.onclick = () => selectOption(i);
+    grid.appendChild(btn);
+  });
+
+  document.getElementById('btn-prev').disabled = currentQ === 0;
+  document.getElementById('btn-next').disabled = currentQ === 49;
+
+  updateQGrid();
+
+  // Auto close sidebar on mobile
+  if (window.innerWidth <= 768) {
+    document.getElementById('quiz-sidebar').classList.remove('open');
+  }
+}
+
+function selectOption(idx) {
+  answers[currentQ] = idx;
+  renderQuestion();
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    visited[currentQ] = true;
+    renderQuestion();
+  }
+}
+
+function nextQuestion() {
+  if (currentQ < 49) {
+    currentQ++;
+    visited[currentQ] = true;
+    renderQuestion();
+  }
+}
+
+function goToQuestion(idx) {
+  currentQ = idx;
+  visited[idx] = true;
+  renderQuestion();
+}
+
+function toggleSidebar() {
+  document.getElementById('quiz-sidebar').classList.toggle('open');
+}
+
+// ===================== SUBMIT =====================
+function confirmSubmit() {
+  const answered = answers.filter(a => a !== null).length;
+  const visitedNotAnswered = visited.filter((v, i) => v && answers[i] === null).length;
+  const notAttended = answers.filter((a, i) => !visited[i] && a === null).length;
+
+  document.getElementById('modal-answered').textContent = answered;
+  document.getElementById('modal-not-answered').textContent = visitedNotAnswered;
+  document.getElementById('modal-not-attended').textContent = notAttended;
+  document.getElementById('confirm-modal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('confirm-modal').classList.remove('show');
+}
+
+function finalSubmit() {
+  if (quizSubmitted) return;
+  quizSubmitted = true;
+  clearInterval(timerInterval);
+  closeModal();
+
+  // Store results (only accessible by checking the data)
+  const score = calculateScore();
+  const resultData = {
+    name: userData.name,
+    college: userData.college,
+    year: userData.year,
+    email: userData.email,
+    phone: userData.phone,
+    totalAnswered: answers.filter(a => a !== null).length,
+    correctAnswers: score,
+    wrongAnswers: answers.filter(a => a !== null).length - score,
+    unattempted: answers.filter(a => a === null).length,
+    percentage: ((score / 50) * 100).toFixed(1),
+    submittedAt: new Date().toLocaleString(),
+    answers: answers,
+    questionSet: 'Random'
+  };
+
+  // Save to localStorage as backup
+  try {
+    const existing = JSON.parse(localStorage.getItem('ece_quiz_results') || '[]');
+    existing.push(resultData);
+    localStorage.setItem('ece_quiz_results', JSON.stringify(existing));
+  } catch(e) {}
+
+  // Send to Google Sheets
+  const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwEtjyeb_akwipsD52QxPb1kc7CRHEDpms0OSSacElH-SvaQr1IY5I8HYGMmWLkn8t9Vw/exec';
+  fetch(SHEET_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(resultData)
+  }).then(() => {
+    console.log('Result saved to Google Sheets!');
+  }).catch(err => {
+    console.warn('Could not send to Google Sheets:', err);
+  });
+
+  // Show thank you page
+  document.getElementById('page-quiz').classList.remove('active');
+  document.getElementById('page-thankyou').classList.add('active');
+  document.getElementById('thankyou-name-text').textContent =
+    `Dear ${userData.name}, your responses have been recorded successfully. Thank you for participating!`;
+}
+
+function calculateScore() {
+  let score = 0;
+  questions.forEach((q, i) => {
+    if (answers[i] === q.ans) score++;
+  });
+  return score;
+}
+
+// ===================== KEYBOARD NAVIGATION =====================
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('page-quiz').classList.contains('active')) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextQuestion();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevQuestion();
+});
+</script>
+
+<!-- PAGE 5: ADMIN LOGIN -->
+<div class="page" id="page-admin-login" style="display:none;">
+  <div class="college-header">
+    <div class="college-name">PODHIGAI COLLEGE OF ENGINEERING AND TECHNOLOGY</div>
+    <div class="divider"></div>
+    <div class="dept-name" style="font-size:clamp(16px,3vw,26px);">Admin — Results Portal</div>
+    <div class="creator-tag">Restricted Access · ECE Department</div>
+  </div>
+  <div class="form-card" style="max-width:400px;">
+    <div class="form-title">🔒 ADMIN LOGIN</div>
+    <div class="form-group full" style="margin-bottom:0;">
+      <label>Admin Password</label>
+      <input type="password" id="admin-pass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')adminLogin()">
+    </div>
+    <div class="error-msg" id="admin-error" style="display:block; margin-top:10px;"></div>
+    <button class="submit-btn" onclick="adminLogin()" style="margin-top:18px;">🔓 LOGIN</button>
+    <div style="margin-top:15px; text-align:center;">
+      <a href="#" onclick="showPage('page-register')" style="color:var(--text-dim); font-size:13px; text-decoration:none;">← Back to Quiz</a>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 6: ADMIN RESULTS DASHBOARD -->
+<div class="page" id="page-admin-results" style="display:none; flex-direction:column; align-items:stretch; padding:0;">
+  <div style="background:linear-gradient(135deg,#020c18,#041525); border-bottom:1px solid rgba(0,212,255,0.3); padding:20px 30px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+    <div>
+      <div style="font-family:'Orbitron',monospace; font-size:18px; color:var(--primary);">📊 RESULTS DASHBOARD</div>
+      <div style="color:var(--text-dim); font-size:13px; margin-top:4px;">ECE Technical Quiz — Podhigai College</div>
+    </div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button onclick="exportCSV()" style="padding:10px 20px; background:linear-gradient(135deg,#00a848,#00cc55); border:none; border-radius:8px; color:white; font-family:'Orbitron',monospace; font-size:11px; cursor:pointer; letter-spacing:1px;">⬇ EXPORT CSV</button>
+      <button onclick="clearResults()" style="padding:10px 20px; background:linear-gradient(135deg,#660000,#aa0000); border:none; border-radius:8px; color:white; font-family:'Orbitron',monospace; font-size:11px; cursor:pointer; letter-spacing:1px;">🗑 CLEAR ALL</button>
+      <button onclick="adminLogout()" style="padding:10px 20px; background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.3); border-radius:8px; color:var(--primary); font-family:'Orbitron',monospace; font-size:11px; cursor:pointer; letter-spacing:1px;">LOGOUT</button>
+    </div>
+  </div>
+
+  <!-- SUMMARY STATS -->
+  <div id="admin-summary" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:15px; padding:25px 30px 10px;"></div>
+
+  <!-- SEARCH -->
+  <div style="padding:0 30px 15px;">
+    <input type="text" id="search-input" placeholder="🔍 Search by name, college, email..." oninput="filterResults()" style="width:100%; max-width:500px; background:rgba(0,212,255,0.05); border:1px solid rgba(0,212,255,0.25); border-radius:8px; padding:12px 16px; color:var(--text); font-family:'Rajdhani',sans-serif; font-size:15px; outline:none;">
+  </div>
+
+  <!-- TABLE -->
+  <div style="padding:0 30px 30px; overflow-x:auto; flex:1;">
+    <table id="results-table" style="width:100%; border-collapse:collapse; min-width:900px;">
+      <thead>
+        <tr style="background:rgba(0,212,255,0.1); border-bottom:2px solid rgba(0,212,255,0.3);">
+          <th style="padding:14px 12px; text-align:left; font-family:'Orbitron',monospace; font-size:11px; color:var(--primary); letter-spacing:1px;">#</th>
+          <th style="padding:14px 12px; text-align:left; font-family:'Orbitron',monospace; font-size:11px; color:var(--primary); letter-spacing:1px;">NAME</th>
+          <th style="padding:14px 12px; text-align:left; font-family:'Orbitron',monospace; font-size:11px; color:var(--primary); letter-spacing:1px;">COLLEGE</th>
+          <th style="padding:14px 12px; text-align:left; font-family:'Orbitron',monospace; font-size:11px; color:var(--primary); letter-spacing:1px;">YEAR</th>
+          <th style="padding:14px 12px; text-align:left; font-family:'Orbitron',monospace; font-size:11px; color:var(--primary); letter-spacing:1px;">EMAIL</th>
+          <th style="padding:14px 12px; text-align:left; font-family:'Orbitron',monospace; font-size:11px; color:var(--primary); letter-spacing:1px;">PHONE</th>
+          <th style="padding:14px 12px; text-align:center; font-family:'Orbitron',monospace; font-size:11px; color:var(--green); letter-spacing:1px;">CORRECT</th>
+          <th style="padding:14px 12px; text-align:center; font-family:'Orbitron',monospace; font-size:11px; color:var(--red); letter-spacing:1px;">WRONG</th>
+          <th style="padding:14px 12px; text-align:center; font-family:'Orbitron',monospace; font-size:11px; color:var(--grey); letter-spacing:1px;">SKIPPED</th>
+          <th style="padding:14px 12px; text-align:center; font-family:'Orbitron',monospace; font-size:11px; color:var(--gold); letter-spacing:1px;">SCORE %</th>
+          <th style="padding:14px 12px; text-align:left; font-family:'Orbitron',monospace; font-size:11px; color:var(--text-dim); letter-spacing:1px;">SUBMITTED</th>
+        </tr>
+      </thead>
+      <tbody id="results-tbody"></tbody>
+    </table>
+    <div id="no-results" style="display:none; text-align:center; padding:60px; color:var(--text-dim);">
+      <div style="font-size:48px; margin-bottom:15px;">📭</div>
+      <div style="font-family:'Orbitron',monospace; font-size:16px; color:var(--primary);">No Results Yet</div>
+      <div style="font-size:14px; margin-top:8px;">Results will appear here once participants complete the quiz.</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #results-tbody tr {
+    border-bottom: 1px solid rgba(0,212,255,0.08);
+    transition: background 0.2s;
+  }
+  #results-tbody tr:hover { background: rgba(0,212,255,0.05); }
+  #results-tbody td { padding: 13px 12px; font-size: 14px; color: var(--text); }
+  .rank-badge {
+    display: inline-block;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 28px;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .score-bar-wrap {
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    height: 6px;
+    width: 80px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+  .score-bar { height: 100%; border-radius: 4px; }
+</style>
+
+<script>
+// ===================== ADMIN =====================
+const ADMIN_PASSWORD = 'ECEvidhya@2024'; // Change this password as needed
+
+function showAdminLogin() {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+  const loginPage = document.getElementById('page-admin-login');
+  loginPage.style.display = 'flex';
+  loginPage.classList.add('active');
+  document.getElementById('admin-pass').value = '';
+  document.getElementById('admin-error').textContent = '';
+}
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+  const page = document.getElementById(pageId);
+  page.style.display = 'flex';
+  page.classList.add('active');
+}
+
+function adminLogin() {
+  const pass = document.getElementById('admin-pass').value;
+  const errDiv = document.getElementById('admin-error');
+  if (pass === ADMIN_PASSWORD) {
+    errDiv.textContent = '';
+    loadAdminDashboard();
+  } else {
+    errDiv.style.color = 'var(--red)';
+    errDiv.textContent = '🚫 Incorrect password. Access denied.';
+    document.getElementById('admin-pass').value = '';
+  }
+}
+
+function adminLogout() {
+  showPage('page-register');
+}
+
+function loadAdminDashboard() {
+  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+  const dash = document.getElementById('page-admin-results');
+  dash.style.display = 'flex';
+  dash.classList.add('active');
+  renderDashboard();
+}
+
+let allResults = [];
+let filteredResults = [];
+
+function renderDashboard() {
+  try {
+    allResults = JSON.parse(localStorage.getItem('ece_quiz_results') || '[]');
+  } catch(e) { allResults = []; }
+
+  filteredResults = [...allResults];
+  renderSummary();
+  renderTable(filteredResults);
+}
+
+function renderSummary() {
+  const total = allResults.length;
+  const avgScore = total ? (allResults.reduce((s,r) => s + parseFloat(r.percentage), 0) / total).toFixed(1) : 0;
+  const highest = total ? Math.max(...allResults.map(r => parseFloat(r.percentage))).toFixed(1) : 0;
+  const fullMarks = allResults.filter(r => parseFloat(r.percentage) >= 90).length;
+
+  const summaryData = [
+    { label: 'Total Participants', value: total, color: 'var(--primary)' },
+    { label: 'Average Score', value: avgScore + '%', color: 'var(--gold)' },
+    { label: 'Highest Score', value: highest + '%', color: 'var(--green)' },
+    { label: 'Score ≥ 90%', value: fullMarks, color: 'var(--accent)' },
+  ];
+
+  document.getElementById('admin-summary').innerHTML = summaryData.map(s => `
+    <div style="background:rgba(0,212,255,0.05); border:1px solid rgba(0,212,255,0.2); border-radius:12px; padding:20px; text-align:center;">
+      <div style="font-family:'Orbitron',monospace; font-size:28px; font-weight:700; color:${s.color};">${s.value}</div>
+      <div style="font-size:12px; color:var(--text-dim); margin-top:6px; letter-spacing:1px; text-transform:uppercase;">${s.label}</div>
+    </div>
+  `).join('');
+}
+
+function renderTable(results) {
+  const tbody = document.getElementById('results-tbody');
+  const noResults = document.getElementById('no-results');
+
+  if (results.length === 0) {
+    tbody.innerHTML = '';
+    noResults.style.display = 'block';
+    return;
+  }
+
+  noResults.style.display = 'none';
+
+  // Sort by score descending
+  const sorted = [...results].sort((a,b) => parseFloat(b.percentage) - parseFloat(a.percentage));
+
+  tbody.innerHTML = sorted.map((r, i) => {
+    const pct = parseFloat(r.percentage);
+    let rankColor = 'rgba(100,100,100,0.3)';
+    let rankText = `#${i+1}`;
+    if (i === 0) { rankColor = '#ffd700'; rankText = '🥇'; }
+    else if (i === 1) { rankColor = '#c0c0c0'; rankText = '🥈'; }
+    else if (i === 2) { rankColor = '#cd7f32'; rankText = '🥉'; }
+
+    const scoreColor = pct >= 75 ? 'var(--green)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+    const barColor = pct >= 75 ? '#00ff88' : pct >= 50 ? '#ffd700' : '#ff3355';
+
+    return `
+      <tr>
+        <td><span class="rank-badge" style="background:${rankColor}20; color:${rankColor}; border:1px solid ${rankColor}40;">${rankText}</span></td>
+        <td style="font-weight:600; color:var(--primary);">${r.name}</td>
+        <td style="color:var(--text-dim);">${r.college}</td>
+        <td>${r.year}</td>
+        <td style="font-size:12px; color:var(--text-dim);">${r.email}</td>
+        <td style="font-family:'Share Tech Mono',monospace; font-size:13px;">${r.phone}</td>
+        <td style="text-align:center; color:var(--green); font-family:'Orbitron',monospace; font-weight:700;">${r.correctAnswers}</td>
+        <td style="text-align:center; color:var(--red); font-family:'Orbitron',monospace; font-weight:700;">${r.wrongAnswers}</td>
+        <td style="text-align:center; color:var(--grey); font-family:'Orbitron',monospace; font-weight:700;">${r.unattempted}</td>
+        <td style="text-align:center;">
+          <span style="font-family:'Orbitron',monospace; font-weight:700; font-size:15px; color:${scoreColor};">${pct}%</span>
+          <div class="score-bar-wrap"><div class="score-bar" style="width:${pct}%; background:${barColor};"></div></div>
+        </td>
+        <td style="font-size:12px; color:var(--text-dim);">${r.submittedAt}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function filterResults() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  filteredResults = allResults.filter(r =>
+    r.name.toLowerCase().includes(q) ||
+    r.college.toLowerCase().includes(q) ||
+    r.email.toLowerCase().includes(q) ||
+    r.year.toLowerCase().includes(q)
+  );
+  renderTable(filteredResults);
+}
+
+function exportCSV() {
+  if (allResults.length === 0) { alert('No results to export.'); return; }
+  const headers = ['Name','College','Year','Email','Phone','Correct','Wrong','Skipped','Score%','Submitted'];
+  const rows = allResults.map(r => [
+    `"${r.name}"`, `"${r.college}"`, `"${r.year}"`, `"${r.email}"`,
+    `"${r.phone}"`, r.correctAnswers, r.wrongAnswers, r.unattempted,
+    r.percentage, `"${r.submittedAt}"`
+  ].join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'ECE_Quiz_Results.csv';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function clearResults() {
+  if (confirm('⚠️ Are you sure you want to DELETE ALL results? This cannot be undone!')) {
+    localStorage.removeItem('ece_quiz_results');
+    allResults = []; filteredResults = [];
+    renderSummary(); renderTable([]);
+  }
+}
+
+// Secret admin access: type "admin" anywhere on registration page
+let adminKeyBuffer = '';
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('page-quiz').classList.contains('active')) return;
+  adminKeyBuffer += e.key.toLowerCase();
+  if (adminKeyBuffer.length > 10) adminKeyBuffer = adminKeyBuffer.slice(-10);
+  if (adminKeyBuffer.endsWith('admin')) {
+    adminKeyBuffer = '';
+    showAdminLogin();
+  }
+});
+</script>
+</body>
+</html>
